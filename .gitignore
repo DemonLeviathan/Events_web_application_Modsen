@@ -114,3 +114,6 @@ artifacts/
 
 # Resharper
 _ReSharper.Caches/
+
+# Ignore appsettings.Development.json
+appsettings.Development.json

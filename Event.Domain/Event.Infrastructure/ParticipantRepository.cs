@@ -1,29 +1,34 @@
 ﻿using Event.Application;
 using Event.Domain;
-using System;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Event.Infrastructure
 {
     public class ParticipantRepository : IParticipantRepository
     {
-        public static List<Domain.Participant> lstParticipants = new List<Domain.Participant>();
+        private readonly ApplicationDBContext _context;
+
+        public ParticipantRepository(ApplicationDBContext context)
+        {
+            _context = context;
+        }
+
         public void AddParticipant(Participant participant)
         {
-            lstParticipants.Add(participant);
+            _context.Participants.Add(participant);
+            _context.SaveChanges();
         }
 
         public List<Participant> GetAllParticipants()
         {
-            return lstParticipants;
+            return _context.Participants.ToList();
         }
 
         public Domain.Participant GetParticipantById(int id)
         {
-            return lstParticipants.FirstOrDefault(p => p.Id == id);
+            return _context.Participants.Find(id);
         }
 
         public void RemoveParticipant(int id)
@@ -31,7 +36,8 @@ namespace Event.Infrastructure
             var participant = GetParticipantById(id);
             if (participant != null)
             {
-                lstParticipants.Remove(participant);
+                _context.Participants.Remove(participant);
+                _context.SaveChanges();
             }
         }
     }
